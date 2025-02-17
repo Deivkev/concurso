@@ -1,2 +1,2 @@
 # concurso
-concurso obligado
+concurso 
