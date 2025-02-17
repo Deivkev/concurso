@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-02-2025 a las 18:11:57
+-- Tiempo de generación: 17-02-2025 a las 18:29:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -34,15 +34,30 @@ CREATE TABLE `citas` (
   `hora` time NOT NULL,
   `sala` enum('Sala de espera 1','Sala de espera 2') NOT NULL,
   `estado` enum('Pendiente','Atendida') DEFAULT 'Pendiente',
-  `servicio_id` int(11) NOT NULL
+  `servicio_id` int(11) NOT NULL,
+  `doctor_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `citas`
 --
 
-INSERT INTO `citas` (`id`, `paciente_id`, `fecha`, `hora`, `sala`, `estado`, `servicio_id`) VALUES
-(1, 1, '2025-02-06', '12:16:00', 'Sala de espera 2', 'Pendiente', 2);
+INSERT INTO `citas` (`id`, `paciente_id`, `fecha`, `hora`, `sala`, `estado`, `servicio_id`, `doctor_id`) VALUES
+(1, 1, '2025-02-06', '12:16:00', 'Sala de espera 2', 'Pendiente', 2, NULL),
+(2, 2, '2025-02-14', '14:28:00', '', 'Pendiente', 3, NULL),
+(3, 3, '2025-02-14', '14:28:00', '', 'Pendiente', 3, NULL),
+(4, 4, '2025-02-12', '16:40:00', '', 'Pendiente', 3, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `doctores`
+--
+
+CREATE TABLE `doctores` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -62,7 +77,33 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `nombre`, `telefono`, `correo`) VALUES
-(1, 'Sebastian', '3284836', 'sebastian@gmail.com');
+(1, 'Sebastian', '3284836', 'sebastian@gmail.com'),
+(2, 'Firulais', '3284836', 'firulais@gmail.com'),
+(3, 'Firulais', '3284836', 'firulais@gmail.com'),
+(4, 'Alex', '3284836', 'alex@gmail.com');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `salas`
+--
+
+CREATE TABLE `salas` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `salas`
+--
+
+INSERT INTO `salas` (`id`, `nombre`) VALUES
+(1, 'Sala de espera 1'),
+(2, 'Sala de espera 2'),
+(3, 'Sala de espera 3'),
+(4, 'Sala de espera 4'),
+(5, 'Sala de espera 5'),
+(6, 'Sala de administración');
 
 -- --------------------------------------------------------
 
@@ -95,18 +136,14 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `username`, `password`) VALUES
-(1, 'kevin', '$2y$10$jDGSaivUb7LOX8i11yfuJexnj2SxBjYM8Q/fjt4ODVFZXSapgV5Ha'),
-(2, 'david', '$2y$10$0QFAn/bNhiLUn7vy74kdouWWve82ATPBLcXUjzzTgwi./yvkrOjgW'),
-(3, 'usuario', '$2y$10$LvcKVxHpfrcp63ou0mtqnOI0PQY/qyJwNGne0vWhwlAlm01uKs0Ku'),
-(4, 'novita', '$2y$10$3FaLexj7LQbAL21vz0give12B8Ph1hx3qx/QT6Jvjxu.Q8c4.kHSO'),
-(5, 'user1', '$2y$10$6YJTIK1gtwA5ghgB7ZCEzOJoz5ti/mVbhJyz11EYj7Pj3XVOGms0y');
+(0, 'Vladimir01', '$2y$10$abONSvRbEJ0CstPDGQrqeO1XDHG1aquRhZLVV2zHEhLowx6Vn/UAi');
 
 --
 -- Índices para tablas volcadas
@@ -121,9 +158,21 @@ ALTER TABLE `citas`
   ADD KEY `servicio_id` (`servicio_id`);
 
 --
+-- Indices de la tabla `doctores`
+--
+ALTER TABLE `doctores`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `salas`
+--
+ALTER TABLE `salas`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -133,13 +182,6 @@ ALTER TABLE `servicios`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indices de la tabla `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -147,25 +189,31 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `doctores`
+--
+ALTER TABLE `doctores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `salas`
+--
+ALTER TABLE `salas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `servicios`
 --
 ALTER TABLE `servicios`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT de la tabla `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
